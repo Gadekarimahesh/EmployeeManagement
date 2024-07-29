@@ -1,22 +1,22 @@
 CREATE DATABASE VineYards_CrudOperations
 
 use VineYards_CrudOperations
-
+go
 CREATE TABLE country (
     CountryID INT PRIMARY KEY,
    CountryName VARCHAR(100) NOT NULL,
 );
-
+go
 CREATE TABLE state (
     StateID INT PRIMARY KEY,
     StateName VARCHAR(100) NOT NULL,
     CountryID INT,
     FOREIGN KEY (CountryID) REFERENCES country(CountryID)
 );
-
+go
 INSERT INTO country (CountryID, CountryName)
 VALUES (1, 'India'),(2, 'Pakistan'),(3, 'China'),(4, 'USA'), (5, 'Sri Lanka');
-
+go
 INSERT INTO state (StateID, StateName, CountryID)
 VALUES
     (1, 'Andhra Pradesh', 1),
@@ -48,7 +48,7 @@ VALUES
     (27, 'Uttarakhand', 1),
     (28, 'West Bengal', 1);
 
-
+go
 INSERT INTO state (StateID, StateName, CountryID)
 VALUES
     (52, 'Western Province', 5),
@@ -56,7 +56,7 @@ VALUES
     (54, 'Northern Province', 5),
     (57, 'Eastern Province', 5);
 
-
+go
 INSERT INTO state (StateID, StateName, CountryID)
 VALUES
     (41, 'California', 4),
@@ -64,21 +64,20 @@ VALUES
     (43, 'New York', 4),
     (51, 'Hawaii', 4);
 
-
+go
 INSERT INTO state (StateID, StateName, CountryID)
 VALUES
     (35, 'Beijing', 3),
     (36, 'Shanghai', 3),
     (37, 'Guangdong', 3),
     (40, 'Tibet', 3);
-select * from country as c inner join state as s on s.CountryID=c.CountryID
-
+go
 CREATE TABLE department (
     DepartmentID INT PRIMARY KEY,
     DepartmentName VARCHAR(100) NOT NULL,
     ManagerName VARCHAR(100)
 );
-
+go
 INSERT INTO department (DepartmentID, DepartmentName, ManagerName)
 VALUES
     (1, 'Sales', 'John Doe'),
@@ -86,7 +85,7 @@ VALUES
     (3, 'Human Resources', 'Michael Johnson'),
     (4, 'IT', 'Emily Brown'),
     (5, 'Finance', 'David Lee');
-
+go
 	CREATE TABLE other_department (
     OtherDepartmentID INT PRIMARY KEY,
 	OtherDepartmentName Varchar(50),
@@ -94,21 +93,21 @@ VALUES
     FOREIGN KEY (DepartmentID) REFERENCES department(DepartmentID)
 );
 
-
+go
 INSERT INTO other_department (OtherDepartmentID, OtherDepartmentName, DepartmentID)
 VALUES
     (1, 'Java Department', 4), 
     (2, '.NET Department', 4), 
     (3, 'HR Operations', 3),
     (4, 'Sales Operations', 1);
+go
 
-
-alter procedure GetDepartmentDetails
+Create procedure GetDepartmentDetails
 as begin 
 select DepartmentID,DepartmentName  from department
 end
+go
 
-Exec GetDepartmentDetails
 
 
 create procedure GetOtherdepartmentdetails 
@@ -116,26 +115,21 @@ create procedure GetOtherdepartmentdetails
 as begin 
 select * from other_department where DepartmentID = @departmentID
 end
-
+go
 create procedure getstatesbyCountryID 
 @countryId int
 as begin 
 select * from state where CountryID = @countryId
 end
+go
 
 create procedure getcountries 
 as begin 
 select * from country
 end
-
-exec getcountries
-
-exec  getstatesbyCountryID 2
+go
 
 
-exec GetOtherdepartmentdetails 4
-
-select * from EmpInfo
 
 create table EmpInfo 
 		(	
@@ -156,9 +150,9 @@ create table EmpInfo
 		otherDepartmentID int FOREIGN KEY REFERENCES other_department(otherDepartmentID),
 		)
 
-		select * from EmpInfo
+go
 
-Alter PROCEDURE Sp_InsertEmployeeInfo
+Create PROCEDURE Sp_InsertEmployeeInfo
 		@EmpName varchar(50),
 		@EmpWorkPhone  Varchar(13),	
 		@EmpCellPhone varchar(13),
@@ -194,15 +188,13 @@ AS BEGIN
 			)
 End
 
+go
+
 alter table EmpInfo add Jobtitle varchar(100)
+go
 
-exec Sp_InsertEmployeeInfo 'Gadekari Mahesh','+918897193624','+918897193624','1999-05-28',23,'2024-05-28','Male','hyd','Ameerpet','GadekariMahesh53@gmail.com',1,1,1,1
 
-select * from EmpInfo
-
-select Emp.EmpID,Emp.EmpName,Emp.EmpWorkPhone,Emp.EmpCellPhone,Emp.EmpEmail,Emp.Empcaddress,,dept.ManagerName from EmpInfo as Emp  left Join department as dept on emp.departmentID = dept.DepartmentID
-
-Alter procedure Sp_GetEmployesList
+Create procedure Sp_GetEmployesList
 	as Begin 
 	select 
 		Emp.EmpID,
@@ -219,7 +211,7 @@ Alter procedure Sp_GetEmployesList
 	on emp.departmentID = dept.DepartmentID
 End
 
-
+go
 
 create procedure Sp_UpdateEmployeeById
 		@EmpID int,
@@ -257,18 +249,15 @@ AS BEGIN
 		Jobtitle=@Jobtitle
 	where EmpID=@EmpID
 End
+go 
 
-
-exec Sp_GetEmployesList
 
 Create procedure Sp_GetEmployeeByID
 @EmpID int
 as begin 
 select * from EmpInfo with(nolock) where Empid=@EmpID
 End
-
-
-exec Sp_GetEmployeeByID 100
+go
 
 
 Create procedure sp_deleteEmployeeByID
@@ -276,6 +265,5 @@ Create procedure sp_deleteEmployeeByID
 as begin 
 	Delete from EmpInfo where Empid=@EmpID
 End
+go
 
-
-exec sp_deleteEmployeeByID 100
